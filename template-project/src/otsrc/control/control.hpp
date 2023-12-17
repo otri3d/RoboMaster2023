@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2021 Advanced Robotics at the University of Washington <robomstr@uw.edu>
+ * Copyright (c) 2020-2022 Advanced Robotics at the University of Washington <robomstr@uw.edu>
  *
  * This file is part of aruw-edu.
  *
@@ -17,22 +17,29 @@
  * along with aruw-edu.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef ENV_UNIT_TESTS
+#pragma once
 
-#include "drivers_singleton.hpp"
+#include "tap/util_macros.hpp"
 
-/**
- * Class that allows one to construct a Drivers instance because of frienship
- * with the Drivers class.
- */
-class DriversSingleton
+namespace tap::communication::serial
+{
+class Remote;
+}
+
+namespace control
+{
+class ControlOperatorInterface
 {
 public:
-    static Drivers drivers;
-};  // class DriversSingleton
+    ControlOperatorInterface(tap::communication::serial::Remote &remote);
 
-Drivers DriversSingleton::drivers;
+    // STEP 1 (Tank Drive): Add getChassisTankLeftInput and getChassisTankRightInput function
+    // declarations
+    mockable float getChassisTankLeftInput();
 
-Drivers *DoNotUse_getDrivers() { return &DriversSingleton::drivers; }
+    mockable float getChassisTankRightInput();
 
-#endif
+private:
+    tap::communication::serial::Remote &remote;
+};
+}  // namespace control
